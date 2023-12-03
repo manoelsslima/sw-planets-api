@@ -2,9 +2,10 @@ package br.eti.manoel.swplanetapi.domain;
 
 import br.eti.manoel.swplanetapi.common.PlanetConstants;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -22,17 +23,26 @@ import static org.mockito.Mockito.when;
  * <br>
  * define o mock do sistema sob teste, define o stub dele e executa a lógica
  * prinçipio AAA - arrange, act and assert
+ * ======================================
+ * Usando Mockito
+ * <br>
+ * Autowired não pode mais ser usado, porque nã há Spring Boot. Usa-se o @Injectmocks.
+ * Injectmocks instancia o objeto e todas as dependẽncias, cirando mocks para elas. Ainda é preciso
+ * definir (anotar) os mocks (anotar as dependências com @Mock).
  */
-@SpringBootTest(classes = PlanetService.class)
+@ExtendWith(MockitoExtension.class)
+//@SpringBootTest(classes = PlanetService.class)
 public class PlanetServiceTest {
 
-    @Autowired
+    //@Autowired
+    @InjectMocks // instancia o planetservice
     private PlanetService planetService;
 
     /**
      * Cria um dublê de teste
      */
-    @MockBean
+    //@MockBean
+    @Mock
     private PlanetRepository planetRepository;
 
     // operacao_estado_retorno
