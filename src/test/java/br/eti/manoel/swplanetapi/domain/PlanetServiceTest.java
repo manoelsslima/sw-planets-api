@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
@@ -62,5 +62,11 @@ public class PlanetServiceTest {
         // implementar hahs and equals na classe Planet
         assertThat(sut).isEqualTo(PlanetConstants.PLANET);
 
+    }
+
+    @Test
+    public void createPlanet_WithInvalidData_ThrowsException() {
+        when(planetRepository.save(PlanetConstants.INVALID_PLANET)).thenThrow(RuntimeException.class);
+        assertThatThrownBy(() -> planetService.create(PlanetConstants.INVALID_PLANET)).isInstanceOf(RuntimeException.class);
     }
 }
