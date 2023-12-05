@@ -7,7 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 
@@ -68,5 +71,20 @@ public class PlanetServiceTest {
     public void createPlanet_WithInvalidData_ThrowsException() {
         when(planetRepository.save(PlanetConstants.INVALID_PLANET)).thenThrow(RuntimeException.class);
         assertThatThrownBy(() -> planetService.create(PlanetConstants.INVALID_PLANET)).isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    public void getPlanet_ByExistingId_ReturnsPlanet() {
+        when(planetRepository.findById(anyLong())).thenReturn(Optional.of(PlanetConstants.PLANET));
+        Optional<Planet> sut = planetService.get(1L);
+        assertThat(sut).isNotEmpty();
+        assertThat(sut.get()).isEqualTo(PlanetConstants.PLANET);
+    }
+
+    @Test
+    public void getPlnaet_ByUnexistingId_ReturnsEmpty() {
+        when(planetRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Optional<Planet> sut = planetService.get(1L);
+        assertThat(sut).isEmpty();
     }
 }
