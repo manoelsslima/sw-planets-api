@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 
@@ -82,9 +83,26 @@ public class PlanetServiceTest {
     }
 
     @Test
-    public void getPlnaet_ByUnexistingId_ReturnsEmpty() {
+    public void getPlanet_ByUnexistingId_ReturnsEmpty() {
         when(planetRepository.findById(anyLong())).thenReturn(Optional.empty());
         Optional<Planet> sut = planetService.get(1L);
+        assertThat(sut).isEmpty();
+    }
+
+    @Test
+    public void getPlanet_ByExistingName_ReturnsPlanet() {
+        when(planetRepository.findByName(PlanetConstants.PLANET.getName())).thenReturn(Optional.of(PlanetConstants.PLANET));
+        Optional<Planet> sut = planetService.getByName(PlanetConstants.PLANET.getName());
+
+        assertThat(sut).isNotEmpty();
+        assertThat(sut.get()).isEqualTo(PlanetConstants.PLANET);
+    }
+
+    @Test
+    public void getPlanet_ByUnexistingName_ReturnsEmpty() {
+        when(planetRepository.findByName(anyString())).thenReturn(Optional.empty());
+        Optional<Planet> sut = planetService.getByName(anyString());
+
         assertThat(sut).isEmpty();
     }
 }
