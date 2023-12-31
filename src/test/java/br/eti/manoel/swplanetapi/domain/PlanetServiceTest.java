@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 
@@ -127,5 +128,21 @@ public class PlanetServiceTest {
         when(planetRepository.findAll(any())).thenReturn(Collections.emptyList());
         List<Planet> sut = planetService.list(PlanetConstants.PLANET.getTerrain(), PlanetConstants.PLANET.getClimate());
         assertThat(sut).isEmpty();
+    }
+
+    @Test
+    public void removePlanet_WithExistingId_doesNotThrowAnyException() {
+        // verifica se nenhuma exceção foi lançada
+        // afira se o código passado no parâmetro não lança exceção
+        assertThatCode(() -> planetService.remove(1L)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void removePlanet_WithUnexistingId_throwsException() {
+        // inverte a lógica para: será lançada uma exceção quando, do repositório passado,
+        // for método for chamado o método deleteById
+        // utilizar quando for fazer stubs de métodos void
+        doThrow(new RuntimeException()).when(planetRepository).deleteById(99L);
+        assertThatThrownBy(() -> planetService.remove(99L)).isInstanceOf(RuntimeException.class);
     }
 }
